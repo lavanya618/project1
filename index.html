@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>For My Special Someone</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #ffafbd, #ffc3a0);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 500px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .heart {
+            position: absolute;
+            font-size: 20px;
+            color: rgba(255, 105, 180, 0.3);
+            animation: float 5s infinite ease-in-out;
+            z-index: 0;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(20deg); }
+        }
+        
+        .page {
+            padding: 30px;
+            transition: transform 0.5s ease, opacity 0.5s ease;
+            position: relative;
+            z-index: 1;
+        }
+        
+        #home-page {
+            display: block;
+        }
+        
+        #confirm-page {
+            display: none;
+            text-align: center;
+            transform: translateY(20px);
+            opacity: 0;
+        }
+        
+        #steps-page {
+            display: none;
+            text-align: center;
+            transform: translateY(20px);
+            opacity: 0;
+        }
+        
+        #goodbye-page {
+            display: none;
+            text-align: center;
+            transform: translateY(20px);
+            opacity: 0;
+        }
+        
+        #error-message {
+            display: none;
+            color: #d64161;
+            text-align: center;
+            margin-top: 15px;
+            font-weight: 500;
+        }
+        
+        h1 {
+            color: #d64161;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .input-group {
+            margin-bottom: 25px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+            font-weight: 500;
+        }
+        
+        input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        
+        input:focus {
+            border-color: #d64161;
+            outline: none;
+        }
+        
+        button {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(to right, #d64161, #ff7b25);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+            box-shadow: 0 5px 15px rgba(214, 65, 97, 0.4);
+            margin-top: 10px;
+        }
+        
+        button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(214, 65, 97, 0.6);
+        }
+        
+        .back-btn {
+            background: linear-gradient(to right, #6a11cb, #2575fc);
+            margin-top: 20px;
+        }
+        
+        .btn-yes {
+            background: linear-gradient(to right, #4CAF50, #8BC34A);
+        }
+        
+        .btn-no {
+            background: linear-gradient(to right, #f44336, #ff9800);
+        }
+        
+        .button-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .button-group button {
+            flex: 1;
+        }
+        
+        .step {
+            background: rgba(255, 182, 193, 0.2);
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
+            text-align: left;
+            display: flex;
+            align-items: flex-start;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .step-number {
+            background: #d64161;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-right: 15px;
+            flex-shrink: 0;
+            font-weight: bold;
+        }
+        
+        .step-content {
+            flex: 1;
+        }
+        
+        .step h3 {
+            color: #d64161;
+            margin-bottom: 10px;
+        }
+        
+        .message {
+            background: rgba(255, 215, 0, 0.2);
+            border-left: 4px solid #ffd700;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+            text-align: left;
+        }
+        
+        .secret-name {
+            font-weight: bold;
+            color: #d64161;
+            font-size: 1.2em;
+        }
+        
+        .goodbye-message {
+            font-size: 1.5rem;
+            margin: 30px 0;
+            color: #d64161;
+            font-weight: bold;
+        }
+        
+        .reveal-text {
+            font-size: 1.8rem;
+            color: #d64161;
+            font-weight: bold;
+            text-align: center;
+            margin: 30px 0;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        @media (max-width: 500px) {
+            .container {
+                border-radius: 15px;
+            }
+            
+            .page {
+                padding: 20px;
+            }
+            
+            h1 {
+                font-size: 1.5rem;
+            }
+            
+            .button-group {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .reveal-text {
+                font-size: 1.5rem;
+            }
+        }
+        
+        .fade-in {
+            animation: fadeIn 1s ease forwards;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .typewriter {
+            overflow: hidden;
+            border-right: .15em solid #d64161;
+            white-space: nowrap;
+            margin: 0 auto;
+            letter-spacing: .15em;
+            animation: typing 3.5s steps(40, end), blink-caret .75s step-end infinite;
+        }
+        
+        @keyframes typing {
+            from { width: 0 }
+            to { width: 100% }
+        }
+        
+        @keyframes blink-caret {
+            from, to { border-color: transparent }
+            50% { border-color: #d64161; }
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 20px;
+            color: #777;
+            font-size: 0.9rem;
+        }
+        
+        .confirmation-text {
+            font-size: 1.2rem;
+            margin: 20px 0;
+            line-height: 1.6;
+        }
+        
+        .step-btn {
+            background: linear-gradient(to right, #9C27B0, #E91E63);
+            margin-top: 10px;
+        }
+        
+        .instructions {
+            font-style: italic;
+            color: #777;
+            margin-top: 10px;
+            text-align: center;
+        }
+        
+        .password-container {
+            position: relative;
+        }
+        
+        .toggle-password {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: #777;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Hearts background elements -->
+        <div class="heart" style="top: 10%; left: 15%;">❤</div>
+        <div class="heart" style="top: 20%; right: 20%;">❤</div>
+        <div class="heart" style="bottom: 30%; left: 25%;">❤</div>
+        <div class="heart" style="bottom: 15%; right: 15%;">❤</div>
+        
+        <!-- Home Page -->
+        <div id="home-page" class="page">
+            <h1>For Someone Special 💖</h1>
+            <div class="input-group">
+                <label for="name">Your Beautiful Name</label>
+                <input type="text" id="name" placeholder="Enter your name">
+            </div>
+            <div class="input-group">
+                <label for="password">Secret Password</label>
+                <div class="password-container">
+                    <input type="password" id="password" placeholder="Enter the secret password">
+                    <span class="toggle-password" id="togglePassword">
+                        <i class="far fa-eye"></i>
+                    </span>
+                </div>
+            </div>
+            <button onclick="checkInputs()">Continue to My Secret</button>
+            <div id="error-message">Please check your name and password</div>
+            
+            <div class="footer">
+                Made with ❤️ for someone special
+            </div>
+        </div>
+        
+        <!-- Confirmation Page -->
+        <div id="confirm-page" class="page">
+            <h1>Hello, <span>Sankari</span> ! </h1>
+            
+            <div class="confirmation-text">
+                <p>Do you want to know about my childhood crush?</p>
+            </div>
+            
+            <div class="button-group">
+                <button class="btn-yes" onclick="showSteps()">
+                    <i class="fas fa-heart"></i> Yes, I'm curious!
+                </button>
+                <button class="btn-no" onclick="showGoodbye()">
+                    <i class="fas fa-times"></i> No, not really
+                </button>
+            </div>
+            
+            <button class="back-btn" onclick="goBackHome()">
+                <i class="fas fa-arrow-left"></i> Back to Home
+            </button>
+        </div>
+        
+        <!-- Steps Page -->
+        <div id="steps-page" class="page">
+            <h1>Follow These Steps, <span class="secret-name"></span> ! </h1>
+            
+            <div class="message">
+                <p>Follow these steps carefully to reveal my childhood crush:</p>
+            </div>
+            
+            <div class="step fade-in" style="animation-delay: 0.5s">
+                <div class="step-number">1</div>
+                <div class="step-content">
+                    <h3>Step One: Close Your Eyes</h3>
+                    <p>Take a deep breath and gently close your eyes. Clear your mind and get ready for the revelation.</p>
+                </div>
+            </div>
+            
+            <div class="step fade-in" style="animation-delay: 1.5s">
+                <div class="step-number">2</div>
+                <div class="step-content">
+                    <h3>Step Two: Go to the Mirror</h3>
+                    <p>Carefully walk to the nearest mirror. Position yourself directly in front of it.</p>
+                </div>
+            </div>
+            
+            <div class="step fade-in" style="animation-delay: 2.5s">
+                <div class="step-number">3</div>
+                <div class="step-content">
+                    <h3>Step Three: Open Your Eyes</h3>
+                    <p>When you're ready, slowly open your eyes and look into the mirror.</p>
+                </div>
+            </div>
+            
+            <div class="reveal-text fade-in" style="animation-delay: 3.5s">
+                You will see my childhood crush! 💖
+            </div>
+            
+            <div class="instructions fade-in" style="animation-delay: 4s">
+                <p>Follow these steps exactly as described for the magic to work!</p>
+            </div>
+            
+            <button class="back-btn" onclick="goBackToConfirm()">
+                <i class="fas fa-arrow-left"></i> Back
+            </button>
+        </div>
+        
+        <!-- Goodbye Page -->
+        <div id="goodbye-page" class="page">
+            <h1>Okay, <span class="secret-name"></span></h1>
+            
+            <div class="goodbye-message">
+                <p>Bye bye 😊</p>
+            </div>
+            
+            <div class="message">
+                <p>If you change your mind, you know where to find me!</p>
+            </div>
+            
+            <button class="back-btn" onclick="goBackToConfirm()">
+                <i class="fas fa-arrow-left"></i> Back
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // Create floating hearts
+        function createHearts() {
+            const container = document.querySelector('.container');
+            for (let i = 0; i < 8; i++) {
+                const heart = document.createElement('div');
+                heart.classList.add('heart');
+                heart.innerHTML = '❤';
+                heart.style.left = Math.random() * 90 + 5 + '%';
+                heart.style.top = Math.random() * 90 + 5 + '%';
+                heart.style.fontSize = (Math.random() * 15 + 10) + 'px';
+                heart.style.animationDelay = (Math.random() * 5) + 's';
+                container.appendChild(heart);
+            }
+        }
+        
+        // Toggle password visibility
+        function setupPasswordToggle() {
+            const togglePassword = document.querySelector('#togglePassword');
+            const password = document.querySelector('#password');
+            
+            togglePassword.addEventListener('click', function () {
+                // Toggle the type attribute
+                const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+                password.setAttribute('type', type);
+                
+                // Toggle the eye icon
+                this.querySelector('i').classList.toggle('fa-eye');
+                this.querySelector('i').classList.toggle('fa-eye-slash');
+            });
+        }
+        
+        // Check if inputs are filled and match the specific criteria
+        function checkInputs() {
+            const name = document.getElementById('name').value.trim().toLowerCase();
+            const password = document.getElementById('password').value;
+            const errorMessage = document.getElementById('error-message');
+            
+            // Check if inputs are empty
+            if (name === "" || password === "") {
+                errorMessage.textContent = "Please enter both your name and password to continue.";
+                errorMessage.style.display = 'block';
+                return;
+            }
+            
+            // Check for specific name and password
+            if (name !== "sankari" || password !== "19092003") {
+                errorMessage.textContent = "Please check your name and password";
+                errorMessage.style.display = 'block';
+                return;
+            }
+            
+            // Hide error message if shown
+            errorMessage.style.display = 'none';
+            
+            // Show the confirmation page
+            document.getElementById('home-page').style.display = 'none';
+            const confirmPage = document.getElementById('confirm-page');
+            confirmPage.style.display = 'block';
+            
+            // Set the name in the welcome message (with proper capitalization)
+            document.querySelectorAll('.secret-name').forEach(el => {
+                el.textContent = "Sankari";
+            });
+            
+            // Animate the confirmation page
+            setTimeout(() => {
+                confirmPage.style.opacity = '1';
+                confirmPage.style.transform = 'translateY(0)';
+            }, 100);
+        }
+        
+        // Show steps page
+        function showSteps() {
+            document.getElementById('confirm-page').style.display = 'none';
+            const stepsPage = document.getElementById('steps-page');
+            stepsPage.style.display = 'block';
+            
+            // Animate the steps page
+            setTimeout(() => {
+                stepsPage.style.opacity = '1';
+                stepsPage.style.transform = 'translateY(0)';
+            }, 100);
+        }
+        
+        // Show goodbye page
+        function showGoodbye() {
+            document.getElementById('confirm-page').style.display = 'none';
+            const goodbyePage = document.getElementById('goodbye-page');
+            goodbyePage.style.display = 'block';
+            
+            // Animate the goodbye page
+            setTimeout(() => {
+                goodbyePage.style.opacity = '1';
+                goodbyePage.style.transform = 'translateY(0)';
+            }, 100);
+        }
+        
+        // Go back to home page
+        function goBackHome() {
+            document.getElementById('confirm-page').style.display = 'none';
+            document.getElementById('home-page').style.display = 'block';
+        }
+        
+        // Go back to confirmation page
+        function goBackToConfirm() {
+            document.getElementById('steps-page').style.display = 'none';
+            document.getElementById('goodbye-page').style.display = 'none';
+            const confirmPage = document.getElementById('confirm-page');
+            confirmPage.style.display = 'block';
+        }
+        
+        // Initialize the app
+        window.onload = function() {
+            createHearts();
+            setupPasswordToggle();
+            
+            // Add enter key support
+            document.getElementById('name').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    checkInputs();
+                }
+            });
+            
+            document.getElementById('password').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    checkInputs();
+                }
+            });
+            
+            // Clear error message when user starts typing
+            document.getElementById('name').addEventListener('input', function() {
+                document.getElementById('error-message').style.display = 'none';
+            });
+            
+            document.getElementById('password').addEventListener('input', function() {
+                document.getElementById('error-message').style.display = 'none';
+            });
+        };
+    </script>
+</body>
+</html>
